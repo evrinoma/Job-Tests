@@ -28,3 +28,43 @@ array_filter(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
     }
 );
 print_r($result);
+
+$result = [];
+
+$data1 = [
+    'parent.child.field'      => 1,
+    'parent.child.field2'     => 2,
+    'parent2.child.name'      => 'test',
+    'parent2.child2.name'     => 'test',
+    'parent2.child2.position' => 10,
+    'parent3.child3.position' => 10,
+];
+
+array_walk(
+    $data1,
+    function ($valueData, $key) use (&$result) {
+        $item = [];
+        array_filter(
+            array_reverse(explode('.', $key)),
+            function ($value) use (&$item, $valueData) {
+                $item = (!$item) ? array($value => $valueData) : array($value => $item);
+            }
+        );
+        $result = array_merge_recursive($result, $item);
+    }
+);
+print_r($result);
+
+/*
+$reverseCall = function ($valueData, $key) use (&$reverse) {
+    $recursiveCall = function ($valueData, $key) use (&$item) {
+        $item[] = $key;
+    };
+    array_walk_recursive($valueData, $recursiveCall);
+    $reverse[] = array($key.".".implode('.', $item));
+};
+
+$reverse = array();
+array_walk($result, $reverseCall);
+print_r($reverse);
+*/
