@@ -19,3 +19,12 @@ $test2 = new Test2(
 
 $test2->printR();
 $test2->getReverse()->printR();
+
+// @TODO we should compare times execution time
+$result = [];
+array_filter(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+    function ($value) use (&$result) {
+        $result = (!$result) ? array($value => null) : array($value => $result);
+    }
+);
+print_r($result);
