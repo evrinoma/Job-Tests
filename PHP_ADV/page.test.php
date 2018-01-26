@@ -21,6 +21,7 @@ $test2->printR();
 $test2->getReverse()->printR();
 
 // @TODO we should compare times execution time
+//task1
 $result = [];
 array_filter(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
     function ($value) use (&$result) {
@@ -29,8 +30,8 @@ array_filter(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
 );
 print_r($result);
 
+//task2
 $result = [];
-
 $data1 = [
     'parent.child.field'      => 1,
     'parent.child.field2'     => 2,
@@ -39,7 +40,6 @@ $data1 = [
     'parent2.child2.position' => 10,
     'parent3.child3.position' => 10,
 ];
-
 array_walk(
     $data1,
     function ($valueData, $key) use (&$result) {
@@ -54,17 +54,19 @@ array_walk(
     }
 );
 print_r($result);
-
-/*
-$reverseCall = function ($valueData, $key) use (&$reverse) {
-    $recursiveCall = function ($valueData, $key) use (&$item) {
-        $item[] = $key;
-    };
-    array_walk_recursive($valueData, $recursiveCall);
-    $reverse[] = array($key.".".implode('.', $item));
+//reverse
+$keyString = "";
+$converted = array();
+$callReverse = function($data, $key) use (&$callReverse, &$keyString, &$converted)
+{
+        if (is_array($data)) {
+            $saveKeyString = $keyString;
+            $keyString .= $key.".";
+            array_walk($data, $callReverse);
+            $keyString = $saveKeyString;
+        } else {
+            $converted[$keyString.$key] = $data;
+        }
 };
-
-$reverse = array();
-array_walk($result, $reverseCall);
-print_r($reverse);
-*/
+array_walk($result, $callReverse);
+print_r($converted);
